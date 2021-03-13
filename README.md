@@ -31,7 +31,7 @@ pip install -r .\requirements.txt
 ```
 
 
-## Running
+### Running
 On Ubuntu:
 Activate your virtual env if you haven't already done so with
 ```bash
