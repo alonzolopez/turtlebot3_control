@@ -1,0 +1,85 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\def\code#1{\texttt{#1}}
+\usepackage{xcolor}
+
+\pagecolor[rgb]{0,0,0} %black
+
+\color[rgb]{0.8,0.8,0.8} %grey
+
+
+\title{Turtlebot EKF and Control}
+\author{Alonzo Lopez}
+\date{March 2021}
+
+\begin{document}
+
+\maketitle
+
+\section{System Description}
+\subsection{State}
+\begin{equation}
+    X = \begin{bmatrix}
+    x & y & \theta
+    \end{bmatrix}^T
+\end{equation}
+
+\subsection{Actions}
+We can send commands in the form of \href{https://docs.ros.org/en/api/geometry_msgs/html/msg/Twist.html}{ROS Twist} messages containing desired linear and angular velocity. 
+\begin{equation}
+    X = \begin{bmatrix}
+    v & \omega
+    \end{bmatrix}^T
+\end{equation}
+where $v = \dot x$ and $\omega = \dot \theta$.
+Note that though we can send other velocities (e.g. $v_y$ and $v_z$ and angular rates about $x$ and $y$), those velocity components are ignored and only the two components,
+$v_x$ and angular velocity about $z$, or $\omega$ are extracted to command the forward velocity of the robot and the angular turning velocity, respectively.
+To simplify the notation going forward, we use $v$ instead of $v_x$.
+The velocity commands are then split across the two wheels of the differential drive wheel base by the 
+\href{https://github.com/ros-controls/ros_controllers/wiki/diff_drive_controller}{ROS Differential Drive Controller}.
+
+\subsection{Dynamics}
+To describe the dynamic motion of the Turtlebot, we use the \href{http://faculty.salina.k-state.edu/tim/robotics_sg/Control/kinematics/unicycle.html}{simple Unicycle model}
+(also see \href{http://planning.cs.uiuc.edu/ch13.pdf}{LaValle's chapter on differential models})
+The continuous-time equations of motion are 
+\begin{equation}
+    \begin{split}
+        \dot x & = v \; cos(\theta) \\
+        \dot y & = v \; sin(\theta) \\
+        \dot \theta & = \omega \\
+    \end{split}
+\end{equation}
+The discretized dynamics are
+\begin{equation}
+    \begin{split}
+        x_{k+1} & = x_k + v_k \; cos(\theta_k) \; dt \\
+        y_{k+1} & = y_k + v_k \; sin(\theta_k) \; dt \\
+        \theta_{k+1} & = \theta_k + \omega_k \; dt \\
+    \end{split}
+\end{equation}
+% \begin{equation}
+%     \begin{split}
+%         x_{k+1} & = x_k + v_k \; cos(\theta_k) \; dt \\
+%         y_{k+1} & = y_k + v_k \; sin(\theta_k) \; dt \\
+%         \theta_{k+1} & = \theta_k + \omega_k \; dt \\
+%         \dot x_{k+1} & = v_{k+1} \; cos(\theta_{k+1}) \\
+%         \dot y_{k+1} & = v_{k+1} \; sin(\theta_{k+1}) \\
+%         \dot \theta_{k+1} & = \omega_{k+1}\\
+%     \end{split}
+% \end{equation}
+It's important to note that we assume our control action for $u = \begin{bmatrix}
+    v & \omega
+\end{bmatrix}^T$ takes effect immediately as opposed to a more realistic model that incorporates acceleration.
+
+\begin{equation}
+    X_{k+1} = f(X_{k}) + g(X_{k}, u_{k})
+\end{equation}
+\subsection{Sensors}
+
+\section{Experiment}
+
+\subsection{Truth in Simulation}
+
+\end{document}

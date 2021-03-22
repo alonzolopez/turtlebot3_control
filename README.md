@@ -22,6 +22,7 @@ On Ubuntu:
 ```bash
 pip install --no-cache-dir --upgrade pip
 pip install -r ./requirements.txt
+sudo apt install npm
 jupyter labextension install jupyterlab-plotly
 jupyter labextension install @jupyter-widgets/jupyterlab-manager plotlywidget
 ```
